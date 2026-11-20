@@ -1,0 +1,69 @@
+# Каталог материалов
+
+Ссылки проверены 21.11.2026. PDF, защищённые авторским правом, не копируются без ясного основания. Скачать можно только то, что допускает страница издателя; ссылки ведут к владельцу/издателю.
+
+## Исторические источники
+
+| ID | Источник | Тип и точное место | Как использовать / ограничение |
+|---|---|---|---|
+| H-01 | [Библиография П. Г. Кузнецова, библиотечный комплекс Университета «Дубна»](https://lib.uni-dubna.ru/search/files/pk_idea/~pk_idea.htm) | Каталог публикаций и ранних служебных документов; отдельные записи о «Проектологии», статье 1996 года и инструкциях СПУ | Сверять реквизиты и наличие, не выводить содержание документа только по названию |
+| H-02 | П. Г. Кузнецов, «Ответь на шесть вопросов, и Россия станет самой демократической страной»; запись «Правда России», № 6 (52), февраль 1996, с. 3 | Поздняя [перепечатка на странице В. Н. Потехина](https://xn--80aaafltebbc3auk2aepkhr3ewjpa.xn--p1ai/otvet-na-shest-voprosov-i-rossiya-stanet-samoy-demokraticheskoy-stranoy1/); текст подписан Кузнецовым | Шесть вопросов относятся к тексту Кузнецова; редакционные пояснения страницы — источник вторичного уровня. Факсимиле газеты не найдено |
+| H-03 | П. Г. Кузнецов, «Проектология» | [PDF журнальной перепечатки](https://www.rypravlenie.ru/wp-content/uploads/2015/07/01-Kuznetsov.pdf), 2015; в публикации указан источник: «Методология русского чуда», альманах «Россия — 2010», М., 1997, с. 51–60 | Авторский текст в позднем воспроизведении. Университетская библиография фиксирует также издания 1994 и 1995 годов; 1997 не первая публикация |
+| H-04 | В. И. Беляков-Бодин, «Развитие и внедрение систем “СПУТНИК-СКАЛАР”» | [Полный PDF статьи](https://www.rypravlenie.ru/wp-content/uploads/2014/08/06-Beliakov-Bodin.pdf), 2014, т. 10, № 2 (23), ст. 6, с. 95–99 | Рассказ участника разработки. Особо сверять с. 96 и 98; не считать независимым аудитом всех применений |
+| H-05 | С. П. Никаноров, «История возникновения, развития и ликвидация ЛаСУРс (1967–1970)» | [Текст на сайте Академии Тринитаризма](https://trinitas.ru/rus/doc/0012/001b/00121635.htm) | Вторичный исторический рассказ о лаборатории и внедрениях; не первичная инструкция СПУ |
+| H-06 | Перечень служебной документации «СПУТНИК-1», «СПУТНИК-2», «СКАЛАР» | Университет «Дубна», [историко-библиографическая страница](https://lib.uni-dubna.ru/search/files/pk_idea/~pk_idea.htm) | Указывает годы, названия и объём части комплектов; полные тексты инструкций отдельно не сверены |
+| H-07 | [Буклет Института медико-биологических проблем к 50-летию](https://www.imbp.ru/WebPages/win1251/IBMP-50/Buklet.pdf) | Институциональный материал ИМБП | Использовать для датировки эксперимента 1967–1968; отдельно проверять, о каком именно наземном комплексе идёт речь |
+| H-08 | [Ретроспективная статья об использовании «Скаляра» на проекте «Энергия — Буран»](https://esj.today/PDF/17ECVN423.pdf) | Вторичная статья 2023 года, с. 7 | Сообщение о модифицированной системе на основе «Скаляра»; современный проекту документ не найден |
+| H-09 | [Собрание трудов П. Г. Кузнецова, том 6](https://cosmatica.org/library/523-nauka-razvitija-zhizni-6-i-tom.html) | Позднее издание, заявляющее публикацию оригинальных документов; [ссылка скачивания](https://cosmatica.org/files/download/5202/5fb322adf5fc809210d40d250d01f0d5) при проверке вернула 403 | Перспективный источник для проверки ранних инструкций. Каталог и год издания расходятся (2023/2024); оригиналы непосредственно не изучены |
+| H-10 | [Библиография трудов и приложения П. Г. Кузнецова](https://raen.info/upload/redactorfiles/11_sham_93_101.pdf) | Научная публикация с перечнем переизданных документов; в томе 6 указаны «СПУТНИК-1» и «Система контроля акций… (“СКАЛАР”)» | Помогает искать сканы и страницы, но дата тома расходится с объявлением издателя; сверить титульный лист |
+
+| H-11 | Мемориальная [библиотека работ Кузнецова](https://pobisk-memory.narod.ru/library.htm), её [библиографический список](https://pobisk-memory.narod.ru/list.htm) и [список ссылок](https://pobisk-memory.narod.ru/links.htm) | Каталог перечисляет «О системах “СПУТНИК-СКАЛАР” для планирования и управления очень большими комплексными программами» (1968, 3 с.); два документа «Система “СКАЛАР”» (1968, 27 с.; 1969, 25 с.); *Die Planungs- und Leitungssysteme SPUTNIK und SKALAR* (1969, 27 с.); «Sputnik – Scalar» (1970, с. 26–32); «Системы “СПУТНИК — СКАЛАР”» (1974); «Проектологию» (1994, 1995, 1997) | Мемориальная библиография, не полный текст и не современная публикация исходным издателем. Сайт предупреждает, что список воспроизводит перечень С. П. Никанорова и может уточняться; использовать как библиографическую наводку, а не как доказательство содержания |
+| H-12 | Примеры карт и планов «СКАЛАР» в мемориальной библиотеке: [план и таблица контрольных точек](https://pobisk-memory.narod.ru/files/SCALAR1.zip), [контрольная точка на карте](https://pobisk-memory.narod.ru/files/SCALAR2.zip), [карта хода разработки](https://pobisk-memory.narod.ru/files/SCALAR3.zip), [объёмная схема, вид сбоку](https://pobisk-memory.narod.ru/files/SCALAR4.zip), [объёмная схема, вид сверху](https://pobisk-memory.narod.ru/files/SCALAR5.zip), [отчёт о ходе работ](https://pobisk-memory.narod.ru/files/SCALAR6.zip) | Шесть ZIP-архивов ведут к PDF-сканам без текстового слоя. Внутренние заголовки файлов `SCALAR01.CDR`–`SCALAR06.CDR`; метаданные цифровых PDF указывают 26.12.2003, что не датирует исходные формы | Названия и порядок взяты из каталога сайта. Содержание страниц не OCR-проверено; исходные даты, составитель и версия формы не установлены. Оставлены внешние ссылки: право повторного размещения не установлено |
+
+## NASA
+
+| ID | Источник | Версия / содержание | Примечание |
+|---|---|---|---|
+| N-01 | NASA, [NPR 7120.5F — Space Flight Program and Project Management Requirements](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7120_005F_&page_name=main) | Rev. F, Change 4; действующая страница отсылает к NID 7120.148 за более свежими требованиями | Требования NASA для её программ и проектов, не общий метод для любой организации |
+| N-02 | NASA, [NID 7120.148](https://nodis3.gsfc.nasa.gov/OPD_Docs/NID_7120_148_.pdf), [актуальный перечень директив](https://nodis3.gsfc.nasa.gov/opd/OPD_list.cfm) | Введена 09.12.2024; текущий перечень продлевает до 01.08.2027 | Сам PDF показывает прежнюю дату окончания 09.12.2025. В каталоге отмечено расхождение; актуальность проверять по живой записи |
+| N-03 | NASA, [Systems Engineering Handbook](https://www.nasa.gov/reference/systems-engineering-handbook/) | NASA/SP-2016-6105 Rev 2; опубликован в 2017 году; общее руководство, сопровождающее NPR 7123.1 | Это руководство, не обязательный норматив. Разделы: [3 — жизненный цикл](https://www.nasa.gov/reference/3-0-nasa-program-project-life-cycle/) и [6 — междисциплинарное управление](https://www.nasa.gov/reference/6-0-crosscutting-technical-management/) |
+| N-04 | NASA, [NPR 7123.1D](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7123_001D_&page_name=Preface), [глава 6 о техническом планировании](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7123_001D_&page_name=Chapter6) | Revision D, Change 2; действует с 05.07.2023 до 05.07.2028 | Обязательные инженерные процессы внутри NASA; не сводить к графику задач |
+
+## FEMA / ICS
+
+| ID | Источник | Версия / содержание | Примечание |
+|---|---|---|---|
+| F-01 | FEMA, [National Incident Management System, Third Edition](https://training.fema.gov/emiweb/is/is700b/handouts/national_incident_management%20system_third%20edition_october_2017.pdf) | 10.10.2017 | FEMA в ретроспективе 2025 года продолжает ссылаться на редакцию 2017 года как на NIMS. Это руководство по инцидентам |
+| F-02 | FEMA, [NIMS: Management by Objectives lesson](https://emilms.fema.gov/_is0700b/groups/203.html) | Учебный модуль FEMA | Показывает связь целей, стратегий/тактики/задач, назначений и зафиксированных результатов |
+| F-03 | FEMA, [Planning P lesson](https://emilms.fema.gov/is_822/groups/140.html) | Обновляемый учебный материал | Цикл оперативного планирования и пересмотра целей; версию страницы сверять перед цитированием |
+| F-04 | FEMA, [ICS Forms Resource Center](https://training.fema.gov/emiweb/is/icsresource/icsforms/) | Текущий индекс форм; при проверке перечислялись формы v3/v3.1 | Для каждой формы сохранять её фактическую версию |
+| F-05 | FEMA, [ICS Form 202 — Incident Objectives](https://training.fema.gov/EMIWeb/IS/ICSResource/assets/ICS%20Forms/ICS%20Form%20202%2C%20Incident%20Objectives%20%28v3.1%29.pdf) | ICS 202 v3.1 по текущему индексу; описывает цели и командный акцент следующего периода | Не смешивать с назначениями и журналами. Не использовать одноимённый Forms Booklet как актуальный: ссылка из индекса, помеченная v3, открывает буклет 2010 года |
+| F-06 | FEMA, [ICS 204 — Assignment List](https://training.fema.gov/EMIWeb/IS/ICSResource/assets/ICS%20Forms/ICS%20Form%20204%2C%20Assignment%20List%20%28v3.1%29.pdf), [ICS 215 — Operational Planning Worksheet](https://training.fema.gov/emiweb/is/icsresource/assets/ics%20forms/ics%20form%20215%2C%20operational%20planning%20worksheet%20%28v3%29.pdf) | Версии 3/3.1 по индексу FEMA | Назначения, задачи и необходимые ресурсы документируются отдельно от цели |
+| F-07 | FEMA, [ICS 214 — Activity Log](https://training.fema.gov/EMIWeb/IS/ICSResource/assets/ICS%20Forms/ICS%20Form%20214%2C%20Activity%20Log%20%28v3.1%29.pdf), [ICS 233CG — Open Action Tracker](https://training.fema.gov/EMIWeb/IS/ICSResource/assets/ICS%20Forms/ICS%20Form%20233CG%2C%20Incident%20Open%20Action%20Tracker%20%28v3%29.pdf) | Версии 3/3.1 | Факт активности и открытые действия имеют отдельные формы; статус действия сам по себе не доказывает достижение цели |
+
+## Армия США / совместное планирование
+
+| ID | Источник | Версия / содержание | Примечание |
+|---|---|---|---|
+| A-01 | U.S. Army, [ADP 6-0: Mission Command](https://rdl.train.army.mil/catalog-ws/view/100.ATSC/1FE33715-CFD1-4614-A489-B3E0480C3F80-1428688882108/adp6_0.pdf) | 31.07.2019 | Замысел, миссионные приказы и инициатива подчинённых. Доктрина Сухопутных войск США |
+| A-02 | U.S. Army, [ADP 5-0: The Operations Process](https://rdl.train.army.mil/catalog-ws/view/100.ATSC/E4166A5D-0FE7-4780-916A-A7E9B227147C-1337689957702/adp5_0.pdf) | 31.07.2019 | Планирование, подготовка, исполнение и оценка |
+| A-03 | U.S. Army, [FM 5-0: Planning and Orders Production](https://armypubs.army.mil/epubs/DR_pubs/DR_a/ARN44590-FM_5-0-001-WEB-3.pdf), [индекс доктрины](https://www.ikn.army.mil/apps/IKNHostedWebsites/Home/LoadPublishedPage?PageUID=30c204aa-de54-471a-8252-2df7d9f5a5cc) | Индекс армии указывает ноябрь 2024 года | Полный PDF не удалось проверить веб-поиском; подробные утверждения по нему отложены |
+| A-04 | Joint Chiefs of Staff, [JP 5-0: Joint Planning](https://www.jcs.mil/Doctrine/Joint-Doctine-Pubs/JP-5-0/) | Страница доктрины | Текущая публичная редакция полного текста не проверена; пока не использовать для детальных выводов |
+
+## Проекты и разработка ПО
+
+| ID | Источник | Версия / содержание | Примечание |
+|---|---|---|---|
+| P-01 | PMI, [PMBOK Guide, Eighth Edition](https://www.pmi.org/standards/pmbok) | Ноябрь 2025; 408 стр.; официальная карточка сообщает о 6 принципах, 7 областях результативности, AI/PMO/procurement | Полный стандарт защищён и не изучался целиком; PMBOK — международный стандарт PMI, не «американская система» как единая категория |
+| P-02 | [Manifesto for Agile Software Development](https://agilemanifesto.org/), [история подписания](https://agilemanifesto.org/history) | Первичный манифест, 2001 | Ценности разработки ПО, а не формальная система управления всеми типами проектов |
+
+## Онтологии и личное планирование
+
+| ID | Источник | Версия / содержание | Примечание |
+|---|---|---|---|
+| PL-01 | Palantir Foundry, [Ontology core concepts](https://www.palantir.com/docs/foundry/ontology/core-concepts) | Живая, неприкреплённая к релизу документация | Объекты/события, свойства, типы связей, действия, функции и интерфейсы; продуктовый источник |
+| PL-02 | Palantir, [Ontology resources and spaces](https://www.palantir.com/docs/foundry/ontologies/ontologies-overview), [object permissions](https://www.palantir.com/docs/foundry/object-permissioning/overview) | Живая документация | Разделяет схему типа и экземпляры данных; полезно для модели, но не доказательство превосходства платформы |
+| PL-03 | Palantir, [Ontology system](https://www.palantir.com/docs/foundry/architecture-center/ontology-system), [actions overview](https://www.palantir.com/docs/foundry/action-types/overview) | Живая документация | Поставщик описывает соединение данных, логики, действий и безопасности; некоторые возможности интерфейсов остаются ограниченными/в разработке |
+| G-01 | David Allen Company, [Natural Planning Model](https://gettingthingsdone.com/2024/11/the-natural-planning-model/) | Авторская методическая публикация, 19.11.2024 | Назначение/принципы → результат → идеи → организация → следующие действия |
+| G-02 | David Allen Company, [Weekly Review Checklist](https://gettingthingsdone.com/wp-content/uploads/2014/10/Weekly_Review_Checklist.pdf) | Официальный PDF | Личный цикл регулярного обзора списков и проектов |
+| G-03 | David Allen Company, [Managing Projects: Tips from David Allen](https://gettingthingsdone.com/2010/02/managing-projects-tips-from-david-allen/) | Интервью/методический материал | Определяет проект как результат, требующий более одного действия; не описывает коллективное принятие обязательств |

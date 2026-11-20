@@ -1,0 +1,248 @@
+fixture_status: valid_hypothetical_plan_with_unverified_goal
+scenario: "A service team restores a failed online payment path in a fictional demonstration environment. No real organization or incident is represented."
+active_profile: crisis
+
+plan_versions:
+  - id: plan-version-demo-01
+    version_id: plan-demo-01
+    created_at: "2030-01-01T12:00:00Z"
+    change_reason: "Initial fictional incident plan."
+    snapshot_reference: "example://snapshot/demo-01"
+    lifecycle_state: current
+    integrity_status: not_calculated
+    created_by: person-demo-01
+    provenance:
+      applies_to: [version_id, created_at, change_reason, snapshot_reference, lifecycle_state, integrity_status]
+      status: stated
+      source_reference: "Fictional scenario text in this file."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+    includes:
+      - person-demo-01
+      - person-demo-02
+      - role-demo-lead
+      - incident-demo-01
+      - incident-record-demo-01
+      - goal-demo-01
+      - criterion-demo-01
+      - criterion-demo-02
+      - commitment-demo-01
+      - acceptance-demo-01
+      - task-demo-01
+      - task-demo-02
+      - task-demo-03
+      - evidence-demo-01
+
+people:
+  - id: person-demo-01
+    identifier: "person-demo-01"
+    display_name: "Дежурный руководитель сценария"
+    holds_role: role-demo-lead
+  - id: person-demo-02
+    identifier: "person-demo-02"
+    display_name: "Независимый проверяющий сценария"
+
+roles:
+  - id: role-demo-lead
+    name: "Incident lead"
+    authority_scope:
+      actions: [accept_commitment, lead_incident, close_goal, close_incident]
+      subject_types: [Commitment, Goal, Incident]
+      subject_ids: [commitment-demo-01, goal-demo-01, incident-demo-01]
+      context_id: tabletop-demo-01
+      valid_from: "2030-01-01T00:00:00Z"
+      valid_until: "2030-01-01T23:59:59Z"
+    held_by: person-demo-01
+    provenance:
+      applies_to: [authority_scope]
+      status: stated
+      source_reference: "Fictional tabletop role definition."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+incident:
+  id: incident-demo-01
+  description: "Test transactions fail in the demonstration environment."
+  state: active
+  detected_at: "2030-01-01T11:55:00Z"
+  context_id: tabletop-demo-01
+  command_owner: person-demo-01
+  command_authority: role-demo-lead
+  communication_channel: "Fictional exercise room"
+  stop_or_escalation_criteria: "Stop the exercise and escalate to the facilitator if the test could affect a real payment system."
+  response_goal: goal-demo-01
+  entries: [incident-record-demo-01]
+  provenance:
+    applies_to: [description, detected_at, context_id, state, command_owner, command_authority, communication_channel, stop_or_escalation_criteria]
+    status: stated
+    source_reference: "Fictional scenario text in this file."
+    recorded_by: person-demo-01
+    recorded_at: "2030-01-01T12:00:00Z"
+    plan_version: plan-version-demo-01
+
+incident_records:
+  - id: incident-record-demo-01
+    entry_type: observation
+    narrative: "A test transaction failed in the demonstration environment."
+    occurred_at: "2030-01-01T11:56:00Z"
+    recorded_at: "2030-01-01T11:57:00Z"
+    incident: incident-demo-01
+    recorded_by: person-demo-01
+    provenance:
+      applies_to: [entry_type, narrative, occurred_at, recorded_at]
+      status: human_confirmed
+      source_reference: "Fictional exercise observation."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T11:57:00Z"
+      plan_version: plan-version-demo-01
+
+goal:
+  id: goal-demo-01
+  title: "Restore the fictional demonstration payment path."
+  target_state: "Demonstration payments pass the agreed verification checks."
+  verification_status: unverified
+  closure_status: open
+  has_criterion: [criterion-demo-01, criterion-demo-02]
+  provenance:
+    applies_to: [title, target_state, verification_status, closure_status]
+    status: stated
+    source_reference: "Fictional scenario text in this file."
+    recorded_by: person-demo-01
+    recorded_at: "2030-01-01T12:00:00Z"
+    plan_version: plan-version-demo-01
+
+goal_criteria:
+  - id: criterion-demo-01
+    criterion_id: "criterion-demo-01"
+    belongs_to: goal-demo-01
+    statement: "A test transaction succeeds through the primary route."
+    required_for_closure: true
+    reviewer_must_differ_from_submitter: false
+    provenance:
+      applies_to: [statement, required_for_closure, reviewer_must_differ_from_submitter]
+      status: stated
+      source_reference: "Fictional scenario acceptance criteria."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+  - id: criterion-demo-02
+    criterion_id: "criterion-demo-02"
+    belongs_to: goal-demo-01
+    statement: "A second reviewer confirms the result from recorded evidence."
+    required_for_closure: true
+    reviewer_must_differ_from_submitter: true
+    provenance:
+      applies_to: [statement, required_for_closure, reviewer_must_differ_from_submitter]
+      status: stated
+      source_reference: "Fictional scenario acceptance criteria."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+commitment:
+  id: commitment-demo-01
+  for_goal: goal-demo-01
+  result: "Diagnose and restore the primary route, or report the blocker and escalation path."
+  acceptance_status: accepted
+  accepted_by: person-demo-01
+  acceptance_events: [acceptance-demo-01]
+  realized_by: [task-demo-01, task-demo-02, task-demo-03]
+  provenance:
+    applies_to: [result, accepted_by, acceptance_status]
+    status: human_confirmed
+    source_reference: "Explicit acceptance event in this fictional example."
+    recorded_by: person-demo-01
+    recorded_at: "2030-01-01T12:00:00Z"
+    plan_version: plan-version-demo-01
+
+commitment_acceptance:
+  - id: acceptance-demo-01
+    commitment: commitment-demo-01
+    outcome: accepted
+    sequence: 1
+    actor: person-demo-01
+    authority_basis: role-demo-lead
+    acted_at: "2030-01-01T12:00:00Z"
+    context_id: tabletop-demo-01
+    rationale: "Fictional tabletop exercise."
+    provenance:
+      applies_to: [outcome, sequence, actor, authority_basis, acted_at, context_id]
+      status: human_confirmed
+      source_reference: "Explicit acceptance in this fictional example."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+tasks:
+  - id: task-demo-01
+    title: "Capture the failing test and timestamp."
+    kind: action
+    state: done
+    expected_output: "A recorded failure reproduction and timestamp."
+    due_condition: "Immediately after detection."
+    realizes: commitment-demo-01
+    assigned_to: person-demo-01
+    produces: [evidence-demo-01]
+    provenance:
+      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      status: stated
+      source_reference: "Fictional exercise task."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+  - id: task-demo-02
+    title: "Check service health and the latest deployment."
+    kind: action
+    state: active
+    expected_output: "A recorded diagnosis of service health and the latest deployment."
+    due_condition: "Before changing the demonstration route."
+    realizes: commitment-demo-01
+    assigned_to: person-demo-01
+    blocked_by: [task-demo-01]
+    provenance:
+      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      status: stated
+      source_reference: "Fictional exercise task."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+  - id: task-demo-03
+    title: "Re-run the agreed verification and record the result."
+    kind: action
+    state: blocked
+    expected_output: "A verification record for the agreed acceptance criteria."
+    due_condition: "After diagnosis and any approved corrective action."
+    realizes: commitment-demo-01
+    assigned_to: person-demo-01
+    blocked_by: [task-demo-02]
+    provenance:
+      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      status: stated
+      source_reference: "Fictional exercise task."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+evidence:
+  - id: evidence-demo-01
+    kind: "Screenshot and output log from one failed test transaction"
+    location: "example://not-a-real-record"
+    observed_at: "2030-01-01T11:56:00Z"
+    submitted_by: person-demo-01
+    review_state: accepted
+    reviewed_by: person-demo-02
+    reviewed_at: "2030-01-01T12:00:00Z"
+    provenance:
+      applies_to: [kind, location, observed_at, review_state, submitted_by, reviewed_by, reviewed_at]
+      status: human_confirmed
+      source_reference: "Fictional screenshot and output log from the demonstration test."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+criterion_evaluations: []
+goal_closure_decision: null
+
+rule_demonstrated: "The first action is complete and its failure record is accepted, but neither criterion has a met evaluation and no closure decision exists; therefore the goal remains unverified."

@@ -1,0 +1,492 @@
+schema_version: "0.2-draft"
+research_status: design_hypothesis
+not_historical_description: true
+source_context:
+  - "Claude share supplied by the project author; treated as requirements input, not factual evidence."
+  - "Historical variants are tracked in ../docs/historical-skalar.md."
+
+identity_contract:
+  field: id
+  meaning: "Globally unique instance identifier used by links in examples and implementations."
+  domain_fields:
+    Human.identifier: "Required human identifier; separate from the instance id."
+    GoalCriterion.criterion_id: "Required stable criterion identifier; separate from the instance id."
+    PlanVersion.version_id: "Required version label; separate from the instance id."
+
+principles:
+  - "Goal, accepted commitment, task, evidence, incident, and software command are distinct types."
+  - "Goal decomposition, task blocking, support, and criterion verification have different semantics."
+  - "A completed task or successful software command does not automatically close a goal."
+  - "Commitments and consequential changes require explicit human acceptance and provenance."
+  - "A personal capture is not an organizational commitment until a person explicitly converts and accepts it."
+
+value_provenance_statuses:
+  - stated
+  - inferred
+  - human_confirmed
+  - missing
+  - conflicting
+
+provenance_contract:
+  applies_to: [goal_target, acceptance_criterion, criterion_evaluation, commitment, assignment, due_condition, resource_allocation, decision, evidence_review, incident_record, role_authority, external_command, external_sync_status, handover, sync_conflict, plan_version_lifecycle, constraint]
+  fields: [applies_to, status, source_reference, recorded_by, recorded_at, plan_version]
+  rule: "Every consequential current value carries provenance; one provenance record may cover fields with the same source. Each later change to such a value has an immutable ChangeRecord. Missing or conflicting values remain explicit."
+  privacy_exception: "Provenance for private CaptureItem and CaptureConversion records is owner-only and may omit plan_version. ChangeRecords for CaptureItem are owner-only and may omit in_version; raw_text is never copied into a ChangeRecord."
+
+types:
+  Goal:
+    meaning: "Desired state or result whose required criteria can be checked."
+    fields:
+      title: required
+      target_state: required
+      verification_status: [unverified, criteria_met, not_met, disputed]
+      closure_status: [open, closure_pending, closed]
+      provenance: required
+    links:
+      has_criterion: "one or more GoalCriterion; at least one must be required_for_closure=true"
+      decomposes_into: Goal
+      served_by: Commitment
+      constrained_by: Constraint
+      depends_on: Goal
+      closure_decision: Decision
+
+  GoalCriterion:
+    meaning: "A distinct condition that must be satisfied to claim the goal is achieved."
+    fields:
+      criterion_id: required
+      statement: required
+      required_for_closure: required
+      reviewer_must_differ_from_submitter: required
+      provenance: required
+    links:
+      belongs_to: Goal
+      evaluated_by: CriterionEvaluation
+
+  CriterionEvaluation:
+    meaning: "A reviewed conclusion about one goal criterion using cited evidence."
+    fields:
+      verdict: [met, not_met, disputed]
+      review_state: [proposed, accepted, rejected]
+      sequence: required
+      assessed_at: required
+      provenance: required
+    links:
+      criterion: GoalCriterion
+      supported_by: "one or more Evidence records"
+      assessed_by: Human
+      supersedes: CriterionEvaluation
+
+  Commitment:
+    meaning: "A record of a proposed promise or bounded undertaking and its acceptance lifecycle; only an accepted current state creates an active commitment."
+    fields:
+      result: required
+      acceptance_status: [proposed, accepted, declined, revoked]
+      provenance: required
+    links:
+      for_goal: Goal
+      accepted_by: Human required_when_acceptance_status_accepted
+      acceptance_events: CommitmentAcceptance
+      realized_by: Task
+      resourced_by: Resource
+      escalates_to: Human
+
+  CommitmentAcceptance:
+    meaning: "Immutable record of a person's acceptance, refusal, or revocation of a commitment."
+    fields:
+      outcome: [accepted, declined, revoked]
+      sequence: required
+      acted_at: required
+      context_id: required
+      rationale: optional
+      provenance: required
+    links:
+      commitment: Commitment
+      actor: Human
+      authority_basis: Role
+      supersedes: CommitmentAcceptance
+      handover: Handover
+
+  Task:
+    meaning: "An executable action or deliverable contributing to an accepted commitment."
+    fields:
+      title: required
+      kind: [action, deliverable]
+      state: [ready, blocked, active, paused, done, canceled]
+      expected_output: required
+      due_condition: optional_by_profile
+      provenance: required
+    links:
+      realizes: Commitment
+      assigned_to: [Human, Organization]
+      blocked_by: Task
+      supports: Goal
+      produces: Evidence
+      completion_evidence: Evidence
+      accepted_output_by: Human
+
+  Human:
+    meaning: "An individual who can accept responsibility, review evidence, or authorize a decision."
+    fields:
+      identifier: required
+      display_name: restricted_by_access_policy
+    links:
+      holds_role: Role
+
+  Organization:
+    meaning: "A group that can own resources or receive a task assignment but cannot stand in for an individual's acceptance."
+    fields:
+      identifier: required
+      display_name: restricted_by_access_policy
+    links:
+      holds_role: Role
+
+  Role:
+    meaning: "An authority or function held by a person or organization in a defined context."
+    fields:
+      name: required
+      authority_scope:
+        actions: required
+        subject_types: required
+        subject_ids: required
+        context_id: required
+        valid_from: optional
+        valid_until: optional
+      provenance: required
+    links:
+      held_by: [Human, Organization]
+
+  Resource:
+    meaning: "Time, money, material, capacity, access, or other means required or allocated."
+    fields:
+      kind: required
+      quantity: optional
+      allocation_status: [requested, proposed, approved, unavailable, consumed]
+      provenance: required
+    links:
+      allocated_by: Human required_when_allocation_status_approved
+      allocated_to: [Goal, Commitment, Task]
+      allocation_decision: Decision
+
+  Alternative:
+    meaning: "A named option considered before a human decision."
+    fields:
+      option_id: required
+      description: required
+      provenance: required
+    links:
+      considered_for: [Goal, PlanVersion]
+      selected_by: Decision
+
+  Constraint:
+    meaning: "A requirement or boundary that a plan must satisfy."
+    fields:
+      statement: required
+      source_reference: required
+      severity: optional
+      provenance: required
+
+  Assumption:
+    meaning: "An unverified proposition temporarily used for planning."
+    fields:
+      statement: required
+      review_trigger: required
+      state: [active, confirmed, rejected, expired]
+      provenance: required
+    links:
+      owner: Human
+
+  Decision:
+    meaning: "A human-authorized selection, closure, allocation, or conflict resolution."
+    fields:
+      decision_type: [select_option, close_goal, close_incident, change_plan, allocate_resource, authorize_command, resolve_conflict]
+      choice: required
+      rationale: required
+      decided_at: required
+      context_id: required
+      provenance: required
+    links:
+      decided_by: Human
+      authority_basis: Role
+      closes_goal: Goal
+      closes_incident: Incident
+      authorizes_command: Command
+      resolves_conflict: SyncConflict
+      selects_alternative: Alternative
+      changes_plan_version: PlanVersion
+      allocates_resource: Resource
+      allocates_to: [Goal, Commitment, Task]
+      supported_by: [CriterionEvaluation, Evidence]
+
+  Evidence:
+    meaning: "An observation or record that may support or contradict a specific criterion assessment."
+    fields:
+      kind: required
+      location: required
+      observed_at: required
+      review_state: [pending, accepted, disputed, rejected]
+      reviewed_at: required_when_accepted
+      provenance: required
+    links:
+      submitted_by: Human
+      reviewed_by: Human
+
+  IncidentRecord:
+    meaning: "A time-stamped entry in the operational history of an incident; it is not automatically evidence that a goal criterion was met."
+    fields:
+      entry_type: required
+      narrative: required
+      occurred_at: required
+      recorded_at: required
+      provenance: required
+    links:
+      incident: Incident
+      recorded_by: Human
+
+  Incident:
+    meaning: "An observed event requiring coordinated response; separate from its goal and tasks."
+    fields:
+      description: required
+      detected_at: required
+      context_id: required
+      state: [reported, active, contained, resolved]
+      severity: optional
+      communication_channel: required_in_crisis_profile
+      stop_or_escalation_criteria: required_in_crisis_profile
+      closure_status: [open, closure_pending, closed]
+      closure_policy_reference: required_when_closed
+      provenance: required
+    links:
+      response_goal: Goal
+      command_owner: Human
+      command_authority: Role
+      entries: IncidentRecord
+      closure_decision: Decision
+      escalates_to: [Human, Incident]
+
+  Review:
+    meaning: "A scheduled or event-triggered inspection of goals, assumptions, evidence, and plan changes."
+    fields:
+      kind: [weekly, operational_period, gate, trigger_based, handover]
+      reviewed_at: required
+      outcome: required
+      provenance: required
+    links:
+      reviewer: Human
+      examines: [Goal, Commitment, Task, Assumption, Evidence, PlanVersion]
+      triggered_by: [Incident, CriterionEvaluation, ChangeRecord]
+
+  PlanVersion:
+    meaning: "An immutable snapshot of a connected planning state."
+    fields:
+      version_id: required
+      created_at: required
+      change_reason: required
+      snapshot_reference: required
+      lifecycle_state: [current, superseded, frozen]
+      integrity_status: [not_calculated, calculated]
+      content_hash: required_when_integrity_calculated
+      provenance: required
+    links:
+      created_by: Human
+      includes: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, ChangeRecord, ExternalSystem, ExternalObject, Command, Handover, SyncConflict]
+      supersedes: PlanVersion
+      change_decision: Decision
+
+  ChangeRecord:
+    meaning: "An immutable record of a consequential field value or state change."
+    fields:
+      field_path: required
+      previous_value: optional
+      new_value: required
+      value_status: required
+      source_reference: required_or_explicitly_missing
+      recorded_at: required
+    links:
+      changes_object: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, PlanVersion, ExternalSystem, ExternalObject, Command, CaptureItem, Handover, SyncConflict]
+      recorded_by: Human
+      in_version: PlanVersion optional_for_private_capture
+
+  ExternalSystem:
+    meaning: "A separately governed software system that owns or executes external objects."
+    fields:
+      system_id: required
+      display_name: required
+
+  ExternalObject:
+    meaning: "A reference to a record in an external system of record."
+    fields:
+      external_id: required
+      url_or_locator: optional
+      last_sync_status: [current, stale, unavailable, conflicted]
+      provenance: required
+    links:
+      belongs_to_system: ExternalSystem
+
+  Command:
+    meaning: "A record of a request to perform a named operation in an external system and its authorization/execution lifecycle; it is not a human task or proof of business outcome."
+    fields:
+      operation: required
+      execution_status: [proposed, authorized, submitted, succeeded, failed, unknown, canceled]
+      idempotency_key: required
+      requested_at: required
+      context_id: required
+      result_summary: optional
+      provenance: required
+    links:
+      targets: ExternalObject
+      requested_by: Human
+      authorized_by: Human required_when_status_authorized_or_later_except_cancelled_before_authorization
+      authorization_decision: Decision required_when_status_authorized_or_later_except_cancelled_before_authorization
+      initiated_from: [Task, Incident, Decision]
+      result_evidence: Evidence
+
+  CaptureItem:
+    meaning: "A private personal inbox entry that has not yet been interpreted as a goal, task, or commitment."
+    fields:
+      raw_text: immutable_restricted_by_access_policy
+      captured_at: required
+      visibility: [owner_only]
+      state: [inbox, reviewed, converted, archived, discarded]
+      provenance: owner_only_plan_version_optional
+    links:
+      owner: Human
+      conversion_events: CaptureConversion
+
+  CaptureConversion:
+    meaning: "A private, attributed act that turns a personal capture into a separate planning object."
+    fields:
+      converted_at: required
+      disclosed_content: [none, selected_fields, redacted_excerpt]
+      provenance: owner_only_plan_version_optional
+    links:
+      source_capture: CaptureItem
+      target: [Goal, Commitment, Task, Decision]
+      converted_by: Human
+
+  Handover:
+    meaning: "An acknowledged transfer of operational context and unfinished work between people."
+    fields:
+      transferred_at: required
+      accepted_at: required_when_state_accepted
+      state: [proposed, accepted, disputed]
+      transfer_scope: [context_only, responsibility]
+      continuation_conditions: required
+      provenance: required
+    links:
+      from_person: Human
+      to_person: Human
+      accepted_by: Human
+      transfers: [Goal, Commitment, Task, Incident]
+      open_items: [Goal, Commitment, Task, Incident, Assumption]
+      owner_changes: ChangeRecord
+      plan_version: PlanVersion
+
+  SyncConflict:
+    meaning: "A detected disagreement between local and remote plan versions that needs explicit resolution."
+    fields:
+      affected_field_path: required
+      local_value: required
+      remote_value: required
+      detected_at: required
+      context_id: required
+      resolution_status: [unresolved, resolved, retained_both]
+      resolution: optional
+      provenance: required
+    links:
+      affected_object: [Goal, GoalCriterion, Commitment, Task, Resource, ExternalObject, Incident]
+      local_version: PlanVersion
+      remote_version: PlanVersion
+      resolved_by: Human required_when_resolution_status_not_unresolved
+      resolution_decision: Decision
+
+relationship_rules:
+  - "Goal.decomposes_into, Goal.depends_on, and Task.blocked_by are distinct edge types; each must be acyclic within its own graph."
+  - "Commitment.acceptance_status=accepted requires a current accepted CommitmentAcceptance event by a Human, a timestamp, and an authority basis. A Role alone is not acceptance."
+  - "The current CommitmentAcceptance event is the un-superseded event with the greatest sequence number; sequence is unique and strictly increases. If its outcome is accepted, Commitment.accepted_by must equal its actor; after decline or revocation, accepted_by is empty."
+  - "Commitment.acceptance_status equals the outcome of its current CommitmentAcceptance event; when there is no event, the status is proposed and accepted_by is empty."
+  - "In the current plan, Task.realizes may point only to an accepted Commitment; immutable prior PlanVersions retain the earlier relationship and state."
+  - "A Decision authority_basis must be held by decided_by, and its structured authority scope must include the action, target type, target id, and context. Free text alone does not grant authority."
+  - "Every Decision type has exactly its typed target: select_option links one Alternative through selects_alternative/selected_by; change_plan links the new PlanVersion through changes_plan_version/change_decision; allocate_resource links one Resource and its recipient through allocates_resource/allocates_to and allocation_decision. Each pair of links is reciprocal."
+  - "A CommitmentAcceptance authority_basis must be held by actor and its action, Commitment id, and context must be within scope."
+  - "A crisis plan requires Incident.command_owner, a human-accepted Commitment, a next Task with expected_output and due_condition, communication_channel, and stop_or_escalation_criteria."
+  - "The next crisis Task must have an explicitly assigned Human; an Organization or Role alone does not identify the accepting individual."
+  - "In a crisis Incident, command_owner must hold the linked command_authority Role, whose scope includes action=lead_incident, the Incident id, and its context."
+  - "A Task of kind action may be done when performance is recorded; a Task of kind deliverable requires accepted completion_evidence and accepted_output_by. Neither closes a Goal."
+  - "A Task with an unresolved blocked_by Task cannot have state=ready or state=active; a cleared blocker is recorded before the dependent Task becomes ready."
+  - "Every Goal has at least one GoalCriterion with required_for_closure=true; an empty criterion set cannot pass validation."
+  - "Evidence is linked to a GoalCriterion through CriterionEvaluation; every accepted CriterionEvaluation cites at least one Evidence record, and every supporting Evidence record has review_state=accepted and a reviewed_by Human."
+  - "For a GoalCriterion with reviewer_must_differ_from_submitter=true, each accepted supporting Evidence is reviewed by a Human other than its submitted_by; the CriterionEvaluation.assessed_by is also distinct from every supporting Evidence.submitted_by."
+  - "For each GoalCriterion, CriterionEvaluation.sequence is unique and strictly increases. A new evaluation explicitly supersedes every previously current evaluation for that criterion; the current evaluation is the unique un-superseded evaluation. If more than one remains current, the criterion is disputed until a new evaluation supersedes all of them."
+  - "Goal.verification_status=criteria_met requires a current accepted met CriterionEvaluation with evidence for every required criterion; this records the verified result, not formal closure. A current proposed evaluation leaves that criterion unverified. Evaluations of optional criteria are informative and do not block closure."
+  - "When all required criteria are met but no closure Decision exists, Goal.closure_status=closure_pending. Goal.closure_status=closed requires verification_status=criteria_met and a separate human-authorized Decision with decision_type=close_goal linked to that Goal and all current evaluations of its required criteria."
+  - "A new current evaluation of a required criterion after Goal closure that no longer supports criteria_met reopens the Goal in the current PlanVersion, clears its current closure_decision, and invalidates closure for current state; the prior immutable PlanVersion retains the closed Goal snapshot and its historical closure Decision."
+  - "A Decision with decision_type=close_goal must target exactly one Goal; Goal.closure_decision and Decision.closes_goal must point to each other within the same PlanVersion, and that Goal snapshot has closure_status=closed. Later re-opening creates a new PlanVersion with the current closure_decision cleared; the historical Decision remains attached to the prior immutable snapshot."
+  - "A current accepted not_met evaluation of a required criterion makes the Goal not_met; a current disputed evaluation or multiple current evaluations of a required criterion make it disputed until reviewed."
+  - "When Handover.state=accepted, accepted_by must be the same Human as to_person and accepted_at must be recorded."
+  - "An accepted Handover transfers at least one typed object and preserves open_items and continuation_conditions from its referenced PlanVersion."
+  - "A Handover with transfer_scope=context_only transfers context but does not claim ownership changed."
+  - "A Goal may be transferred with transfer_scope=responsibility only together with at least one active Commitment for that Goal; every active Commitment serving the Goal is included and accepted by to_person. A Goal alone can be transferred only as context, because Goal has no direct owner field."
+  - "For every Commitment in an accepted Handover with transfer_scope=responsibility, the recipient creates the current accepted CommitmentAcceptance event with actor=to_person and handover pointing back to that Handover; record the status/owner transition in a ChangeRecord."
+  - "For every Incident in an accepted Handover with transfer_scope=responsibility, Incident.command_owner becomes to_person and a linked ChangeRecord records the owner transition."
+  - "For every Task in an accepted Handover with transfer_scope=responsibility, Task.assigned_to includes to_person and a linked ChangeRecord records the assignment transition."
+  - "An accepted CriterionEvaluation has a non-empty supported_by relation; a met verdict cannot use rejected, disputed, or pending Evidence."
+  - "Evidence.review_state=accepted requires reviewed_by and reviewed_at; the accepted review remains separate from the criterion verdict."
+  - "A successful Command is not evidence that the intended business outcome occurred; verify the relevant GoalCriterion separately."
+  - "Only a Command with execution_status=authorized or later has an authorization Decision: Decision.authorizes_command and Command.authorization_decision point to each other, the decision type is authorize_command, authorized_by equals Decision.decided_by, and the authority scope covers that exact Command and context."
+  - "Command.execution_status=proposed has no authorization links. authorized, submitted, succeeded, failed, and unknown require the reciprocal human authorization Decision; canceled may lack it only when cancellation preceded authorization, otherwise the authorization links are retained. A status value alone never authorizes execution."
+  - "Command transitions are proposed → authorized → submitted → succeeded/failed/unknown. Proposed and authorized-but-unsubmitted commands may be canceled; a submitted command may be marked canceled only after external confirmation recorded as accepted result_evidence. An unknown result remains unresolved until reconciled as succeeded, failed, or canceled; retries reuse the same idempotency key and do not imply success."
+  - "A change_plan Decision and PlanVersion.change_decision point to each other; the Decision targets the new version, which supersedes the previous version."
+  - "An allocate_resource Decision points to the Resource and its Goal, Commitment, or Task recipient; Resource.allocation_decision points back to the Decision."
+  - "Resource.allocation_status=approved requires a matching allocate_resource Decision, allocated_by=Decision.decided_by, an authorized human decision-maker, and reciprocal links to the exact recipient; an approved status alone never allocates a resource. consumed requires a prior approved allocation. Transitions are requested → proposed/approved/unavailable, proposed → approved/unavailable, approved → consumed; unavailable and consumed are terminal for that allocation record, and later allocations use a new Resource record."
+  - "Decision.resolves_conflict and SyncConflict.resolution_decision must point to each other; resolved_by must equal Decision.decided_by, and the decision scope must cover that exact conflict and context."
+  - "Decision.closes_incident and Incident.closure_decision must point to each other; a close_incident decision includes accepted resolution Evidence and an authority scope covering that Incident and context."
+  - "Incident.state=resolved is not formal closure. Incident.closure_status=closed requires state=resolved, a closure policy reference, accepted resolution Evidence, and a human Decision of type close_incident linked in both directions."
+  - "Each consequential current value has field-scoped provenance. Each later value or status change has a ChangeRecord linked to its source, human author, time, and PlanVersion, except private capture records, whose owner-only changes may omit PlanVersion."
+  - "A CaptureItem cannot create an organizational Commitment without a CaptureConversion by its owner and a separate accepted commitment event."
+  - "Owner-only CaptureItem text, CaptureConversion records, and CaptureItem ChangeRecords are not included in a shared PlanVersion; only explicitly disclosed fields of the newly created target object may be shared. Private capture ChangeRecords record lifecycle fields only, never raw_text or its contents."
+  - "CaptureItem.state=converted requires a CaptureConversion whose source_capture and target are linked; converted_by must be the item owner. Capture sharing is expressed only through explicitly disclosed target fields, never by changing CaptureItem.visibility."
+  - "CaptureConversion is an immutable event; a correction appends a new conversion record rather than editing the prior disclosure."
+  - "An unresolved SyncConflict is never merged or overwritten silently; any resolution, including retaining both values, requires a human Decision linked to the affected object and its local and remote PlanVersions."
+  - "The affected SyncConflict object must be present in both referenced PlanVersions; the human resolution decision matches both conflicting values."
+  - "PlanVersion snapshots are immutable; a revised plan creates a new version linked through supersedes."
+  - "If an Incident is resolved but lacks its closure Decision, closure_status remains closure_pending; containment, task completion, resolution, and closure remain separate."
+  - "Permissions, date calculations, idempotency, cycle checks, and authorization are deterministic code responsibilities."
+
+profiles:
+  crisis:
+    required: [Incident.command_owner, Incident.command_authority, Incident.communication_channel, Incident.stop_or_escalation_criteria, Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.title, Task.assigned_to, Task.expected_output, Task.due_condition]
+    conditions:
+      - "The current CommitmentAcceptance event has outcome=accepted, actor=Human, acted_at, and an authority_basis."
+      - "At least one GoalCriterion is marked required_for_closure=true."
+    policy: "Never waive legal authority, safety constraints, mandatory checks, or human acceptance."
+  standard:
+    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.expected_output]
+    conditions:
+      - "The current CommitmentAcceptance event has outcome=accepted and actor=Human."
+    recommended: [Task.blocked_by, Resource, Assumption, Review, CriterionEvaluation]
+  deliberate:
+    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.expected_output]
+    conditions:
+      - "The current CommitmentAcceptance event has outcome=accepted and actor=Human."
+    recommended: [alternatives, risks, Resource, schedule_basis, interfaces, lifecycle_reviews, PlanVersion]
+
+ai_policy:
+  may:
+    - ask_clarifying_questions
+    - propose_slot_candidates_with_provenance
+    - summarize_changes_and_conflicts
+    - suggest_reviews_or_missing_evidence
+  requires_human_acceptance:
+    - accept_commitment
+    - assign_responsibility
+    - approve_deadline
+    - allocate_resource
+    - authorize_external_command
+    - change_acceptance_criteria
+    - close_goal
+    - resolve_sync_conflict
+  never_silent:
+    - overwrite_confirmed_value
+    - convert_inferred_value_to_confirmed
+    - report_success_without_evidence
+    - convert_private_capture_to_shared_commitment
