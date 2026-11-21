@@ -1,6 +1,8 @@
 schema_version: "0.3-draft"
 research_status: design_hypothesis
 not_historical_description: true
+known_limitations:
+  goal_criterion_coverage: "The model checks declared required criteria, their accepted evaluations, evidence, and the separate closure decision. It does not model or validate whether the criterion set covers the full target state. The pilot's insufficient-criterion scenario uses an external expert reference and evaluates human/process detection, not automatic model detection."
 source_context:
   - "Claude share supplied by the project author; treated as requirements input, not factual evidence."
   - "Historical variants are tracked in ../docs/historical-skalar.md."
@@ -28,7 +30,7 @@ value_provenance_statuses:
   - conflicting
 
 provenance_contract:
-  applies_to: [goal_target, goal_purpose, acceptance_criterion, quantitative_criterion, criterion_evaluation, commitment, commitment_intent, assignment, due_condition, work_location, causal_rationale, resource_allocation, decision, evidence_review, incident_record, role_authority, external_command, external_sync_status, handover, sync_conflict, plan_version_lifecycle, constraint]
+  applies_to: [goal_target, goal_purpose, acceptance_criterion, quantitative_criterion, criterion_evaluation, commitment, commitment_intent, acceptance_explanation, assignment, due_condition, work_location, causal_rationale, resource_allocation, decision, evidence_review, incident_record, role_authority, external_command, external_sync_status, handover, sync_conflict, plan_version_lifecycle, constraint]
   fields: [applies_to, status, source_reference, recorded_by, recorded_at, plan_version]
   rule: "Every consequential current value carries provenance; one provenance record may cover fields with the same source. Each later change to such a value has an immutable ChangeRecord. Missing or conflicting values remain explicit."
   privacy_exception: "Provenance for private CaptureItem and CaptureConversion records is owner-only and may omit plan_version. ChangeRecords for CaptureItem are owner-only and may omit in_version; raw_text is never copied into a ChangeRecord."
@@ -103,13 +105,13 @@ types:
       has_rationale: CausalRationale
 
   CommitmentAcceptance:
-    meaning: "Immutable record of a person's acceptance, refusal, or revocation of a commitment."
+    meaning: "Immutable record of a person's acceptance, refusal, or revocation of a commitment; an optional acceptance explanation is not the causal rationale for the commitment or the rationale for a separate decision."
     fields:
       outcome: [accepted, declined, revoked]
       sequence: required
       acted_at: required
       context_id: required
-      rationale: optional
+      acceptance_explanation: optional
       provenance: required
     links:
       commitment: Commitment

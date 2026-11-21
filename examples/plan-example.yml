@@ -194,9 +194,9 @@ commitment_acceptance:
     authority_basis: role-demo-lead
     acted_at: "2030-01-01T12:00:00Z"
     context_id: tabletop-demo-01
-    rationale: "Fictional tabletop exercise."
+    acceptance_explanation: "Fictional tabletop exercise."
     provenance:
-      applies_to: [outcome, sequence, actor, authority_basis, acted_at, context_id]
+      applies_to: [outcome, sequence, actor, authority_basis, acted_at, context_id, acceptance_explanation]
       status: human_confirmed
       source_reference: "Explicit acceptance in this fictional example."
       recorded_by: person-demo-01
