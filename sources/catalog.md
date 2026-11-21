@@ -56,6 +56,7 @@
 |---|---|---|---|
 | P-01 | PMI, [PMBOK Guide, Eighth Edition](https://www.pmi.org/standards/pmbok) | Ноябрь 2025; 408 стр.; официальная карточка сообщает о 6 принципах, 7 областях результативности, AI/PMO/procurement | Полный стандарт защищён и не изучался целиком; PMBOK — международный стандарт PMI, не «американская система» как единая категория |
 | P-02 | [Manifesto for Agile Software Development](https://agilemanifesto.org/), [история подписания](https://agilemanifesto.org/history) | Первичный манифест, 2001 | Ценности разработки ПО, а не формальная система управления всеми типами проектов |
+| P-03 | Atlassian Jira, [overview of work items](https://www.atlassian.com/software/jira/guides/issues/overview), [configure the issue type hierarchy](https://support.atlassian.com/jira-cloud-administration/docs/configure-the-issue-type-hierarchy/), [issue types](https://support.atlassian.com/jira-cloud-administration/docs/what-are-issue-types/), [subtasks](https://support.atlassian.com/jira-cloud-administration/docs/configure-sub-tasks/) | Product documentation; the documented default hierarchy is Epic → standard work items such as Story/Task/Bug → Subtask; hierarchy and issue types can be configured | Vendor documentation describes Jira's tracking model, not a universal work ontology. Accessed 21.11.2026; verify current behavior for the configured Jira edition and workspace |
 
 ## Онтологии и личное планирование
 
