@@ -81,7 +81,7 @@ types:
     links:
       criterion: GoalCriterion
       supported_by: "one or more Evidence records"
-      assessed_by: Human
+      assessed_by: Human required
       supersedes: CriterionEvaluation
 
   Commitment:
@@ -276,8 +276,8 @@ types:
       reviewed_at: required_when_accepted
       provenance: required
     links:
-      submitted_by: Human
-      reviewed_by: Human
+      submitted_by: Human required
+      reviewed_by: Human required_when_review_state_accepted
 
   IncidentRecord:
     meaning: "A time-stamped entry in the operational history of an incident; it is not automatically evidence that a goal criterion was met."
