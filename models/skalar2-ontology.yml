@@ -1,4 +1,4 @@
-schema_version: "0.2-draft"
+schema_version: "0.3-draft"
 research_status: design_hypothesis
 not_historical_description: true
 source_context:
@@ -28,7 +28,7 @@ value_provenance_statuses:
   - conflicting
 
 provenance_contract:
-  applies_to: [goal_target, acceptance_criterion, criterion_evaluation, commitment, assignment, due_condition, resource_allocation, decision, evidence_review, incident_record, role_authority, external_command, external_sync_status, handover, sync_conflict, plan_version_lifecycle, constraint]
+  applies_to: [goal_target, goal_purpose, acceptance_criterion, quantitative_criterion, criterion_evaluation, commitment, commitment_intent, assignment, due_condition, work_location, causal_rationale, resource_allocation, decision, evidence_review, incident_record, role_authority, external_command, external_sync_status, handover, sync_conflict, plan_version_lifecycle, constraint]
   fields: [applies_to, status, source_reference, recorded_by, recorded_at, plan_version]
   rule: "Every consequential current value carries provenance; one provenance record may cover fields with the same source. Each later change to such a value has an immutable ChangeRecord. Missing or conflicting values remain explicit."
   privacy_exception: "Provenance for private CaptureItem and CaptureConversion records is owner-only and may omit plan_version. ChangeRecords for CaptureItem are owner-only and may omit in_version; raw_text is never copied into a ChangeRecord."
@@ -39,6 +39,7 @@ types:
     fields:
       title: required
       target_state: required
+      purpose_statement: optional_by_profile
       verification_status: [unverified, criteria_met, not_met, disputed]
       closure_status: [open, closure_pending, closed]
       provenance: required
@@ -49,14 +50,19 @@ types:
       constrained_by: Constraint
       depends_on: Goal
       closure_decision: Decision
+      has_rationale: CausalRationale
 
   GoalCriterion:
     meaning: "A distinct condition that must be satisfied to claim the goal is achieved."
     fields:
       criterion_id: required
       statement: required
+      measurement_kind: [qualitative, quantitative]
       required_for_closure: required
       reviewer_must_differ_from_submitter: required
+      quantitative_measure:
+        required_when: measurement_kind=quantitative
+        fields: [operator, target_value, unit, measurement_method]
       provenance: required
     links:
       belongs_to: Goal
@@ -80,6 +86,10 @@ types:
     meaning: "A record of a proposed promise or bounded undertaking and its acceptance lifecycle; only an accepted current state creates an active commitment."
     fields:
       result: required
+      intent_statement: optional_by_profile
+      where_status: [specified, not_applicable, missing]
+      where_not_applicable_reason: required_when_where_status_not_applicable
+      where_missing_reason: required_when_where_status_missing
       acceptance_status: [proposed, accepted, declined, revoked]
       provenance: required
     links:
@@ -87,8 +97,10 @@ types:
       accepted_by: Human required_when_acceptance_status_accepted
       acceptance_events: CommitmentAcceptance
       realized_by: Task
+      applies_in: [ExecutionContext]
       resourced_by: Resource
       escalates_to: Human
+      has_rationale: CausalRationale
 
   CommitmentAcceptance:
     meaning: "Immutable record of a person's acceptance, refusal, or revocation of a commitment."
@@ -111,15 +123,29 @@ types:
     fields:
       title: required
       kind: [action, deliverable]
+      work_pattern: [one_off, bounded_iteration, continuous]
       state: [ready, blocked, active, paused, done, canceled]
       expected_output: required
+      method_summary: optional
+      where_status: [specified, not_applicable, missing]
+      where_not_applicable_reason: required_when_where_status_not_applicable
+      where_missing_reason: required_when_where_status_missing
       due_condition: optional_by_profile
       provenance: required
+      iteration_contract:
+        required_when: work_pattern=bounded_iteration
+        fields: [entry_condition, exit_criterion, max_iterations_or_duration, decision_owner, per_iteration_output]
+      continuous_contract:
+        required_when: work_pattern=continuous
+        fields: [cadence, quality_standard, escalation_trigger, review_due]
     links:
       realizes: Commitment
       assigned_to: [Human, Organization]
+      executed_in: [ExecutionContext]
+      decomposes_into: Task
       blocked_by: Task
       supports: Goal
+      has_rationale: CausalRationale
       produces: Evidence
       completion_evidence: Evidence
       accepted_output_by: Human
@@ -131,6 +157,15 @@ types:
       display_name: restricted_by_access_policy
     links:
       holds_role: Role
+
+  ExecutionContext:
+    meaning: "A physical place, organizational unit, operating area, or information system where a Task is carried out."
+    fields:
+      context_id: required
+      kind: [physical_place, organizational_unit, operating_area, information_system]
+      name: required
+      description: optional
+      provenance: required
 
   Organization:
     meaning: "A group that can own resources or receive a task assignment but cannot stand in for an individual's acceptance."
@@ -160,6 +195,7 @@ types:
     fields:
       kind: required
       quantity: optional
+      unit: required_when_quantity_present
       allocation_status: [requested, proposed, approved, unavailable, consumed]
       provenance: required
     links:
@@ -194,6 +230,17 @@ types:
       provenance: required
     links:
       owner: Human
+      applies_to: [Goal, Commitment, Task]
+
+  CausalRationale:
+    meaning: "A reviewable claim about why a Goal, Commitment, or Task is expected to contribute to its intended result; distinct from purpose and decision rationale."
+    fields:
+      statement: required
+      status: [proposed, supported, contradicted, superseded]
+      provenance: required
+    links:
+      explains: [Goal, Commitment, Task]
+      based_on: [Assumption, Evidence]
 
   Decision:
     meaning: "A human-authorized selection, closure, allocation, or conflict resolution."
@@ -266,13 +313,17 @@ types:
   Review:
     meaning: "A scheduled or event-triggered inspection of goals, assumptions, evidence, and plan changes."
     fields:
-      kind: [weekly, operational_period, gate, trigger_based, handover]
+      kind: [weekly, operational_period, gate, trigger_based, handover, collective_orientation]
       reviewed_at: required
       outcome: required
+      understanding_check: optional_by_context
       provenance: required
     links:
       reviewer: Human
+      participants: [Human, Organization]
       examines: [Goal, Commitment, Task, Assumption, Evidence, PlanVersion]
+      checks_intent: [Goal, Commitment]
+      uses_context: [Evidence, IncidentRecord, Assumption]
       triggered_by: [Incident, CriterionEvaluation, ChangeRecord]
 
   PlanVersion:
@@ -288,7 +339,7 @@ types:
       provenance: required
     links:
       created_by: Human
-      includes: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, ChangeRecord, ExternalSystem, ExternalObject, Command, Handover, SyncConflict]
+      includes: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, ExecutionContext, CausalRationale, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, ChangeRecord, ExternalSystem, ExternalObject, Command, Handover, SyncConflict]
       supersedes: PlanVersion
       change_decision: Decision
 
@@ -302,7 +353,7 @@ types:
       source_reference: required_or_explicitly_missing
       recorded_at: required
     links:
-      changes_object: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, PlanVersion, ExternalSystem, ExternalObject, Command, CaptureItem, Handover, SyncConflict]
+      changes_object: [Goal, GoalCriterion, CriterionEvaluation, Commitment, CommitmentAcceptance, Task, ExecutionContext, CausalRationale, Human, Organization, Role, Resource, Alternative, Constraint, Assumption, Decision, Evidence, Incident, IncidentRecord, Review, PlanVersion, ExternalSystem, ExternalObject, Command, CaptureItem, Handover, SyncConflict]
       recorded_by: Human
       in_version: PlanVersion optional_for_private_capture
 
@@ -393,14 +444,26 @@ types:
       resolution: optional
       provenance: required
     links:
-      affected_object: [Goal, GoalCriterion, Commitment, Task, Resource, ExternalObject, Incident]
+      affected_object: [Goal, GoalCriterion, Commitment, Task, ExecutionContext, CausalRationale, Resource, ExternalObject, Incident]
       local_version: PlanVersion
       remote_version: PlanVersion
       resolved_by: Human required_when_resolution_status_not_unresolved
       resolution_decision: Decision
 
 relationship_rules:
+  - "Every Task declares exactly one work_pattern; kind (action/deliverable) is an independent distinction."
+  - "Review.kind=collective_orientation requires at least two Human participants, a checks_intent link to a Goal with a stated purpose_statement or a Commitment with a stated intent_statement, and at least one uses_context link; without the linked intent field the review is incomplete. It does not change a Goal, Commitment, or PlanVersion without a separate authorized Decision."
   - "Goal.decomposes_into, Goal.depends_on, and Task.blocked_by are distinct edge types; each must be acyclic within its own graph."
+  - "Task.decomposes_into is a parent-to-child execution breakdown, not a blocker or support link; the Task decomposition graph must be acyclic."
+  - "A Task with where_status=specified has one or more executed_in ExecutionContext links; where_status=not_applicable has none and a reason; where_status=missing has none and a reason. Missing context is not treated as not applicable, especially where location or system affects safety, authority, access, or handoff. In the crisis profile, a Task with materially unresolved context cannot begin until the context is resolved or an authorized escalation determines a safe next step."
+  - "Commitment.where_status uses the same specified/not_applicable/missing rule with applies_in contexts; child Task execution contexts must be contained within the specified Commitment.applies_in scope when that mission scope is known. A Task may refine the mission scope but cannot silently expand it."
+  - "A CausalRationale explains exactly one Goal, Commitment, or Task, the target's has_rationale link points back to it, and any linked Assumption applies to that same target. CausalRationale is a testable means-to-end claim; Goal.purpose_statement and Commitment.intent_statement express intent, while Decision.rationale explains a choice."
+  - "A quantitative GoalCriterion has operator, target_value, unit, and measurement_method. This measures the result; Resource.quantity and Resource.unit separately measure requested or allocated means."
+  - "Every GoalCriterion declares measurement_kind; a qualitative criterion uses its statement and linked evidence, while a quantitative criterion also has operator, target_value, unit, and measurement_method."
+  - "Resource.unit is required when Resource.quantity is present; units are never inferred from a bare number."
+  - "Task.work_pattern=bounded_iteration requires an exit criterion, an iteration/time limit, a decision owner, and a per-iteration output; repetition is not encoded as a cyclic schedule dependency."
+  - "Task.work_pattern=continuous requires a cadence, a quality standard, an escalation trigger, and a review due; it has no project completion deadline unless a separate Goal defines one."
+  - "Task.work_pattern=one_off has a finite expected output and participates in the acyclic task schedule when dependencies are modeled."
   - "Commitment.acceptance_status=accepted requires a current accepted CommitmentAcceptance event by a Human, a timestamp, and an authority basis. A Role alone is not acceptance."
   - "The current CommitmentAcceptance event is the un-superseded event with the greatest sequence number; sequence is unique and strictly increases. If its outcome is accepted, Commitment.accepted_by must equal its actor; after decline or revocation, accepted_by is empty."
   - "Commitment.acceptance_status equals the outcome of its current CommitmentAcceptance event; when there is no event, the status is proposed and accepted_by is empty."
@@ -454,18 +517,18 @@ relationship_rules:
 
 profiles:
   crisis:
-    required: [Incident.command_owner, Incident.command_authority, Incident.communication_channel, Incident.stop_or_escalation_criteria, Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.title, Task.assigned_to, Task.expected_output, Task.due_condition]
+    required: [Incident.command_owner, Incident.command_authority, Incident.communication_channel, Incident.stop_or_escalation_criteria, Goal.target_state, Goal.purpose_statement, GoalCriterion.statement, Commitment.intent_statement, Commitment.where_status, Commitment.accepted_by, Commitment.acceptance_events, Task.title, Task.work_pattern, Task.where_status, Task.assigned_to, Task.expected_output, Task.due_condition]
     conditions:
       - "The current CommitmentAcceptance event has outcome=accepted, actor=Human, acted_at, and an authority_basis."
       - "At least one GoalCriterion is marked required_for_closure=true."
     policy: "Never waive legal authority, safety constraints, mandatory checks, or human acceptance."
   standard:
-    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.expected_output]
+    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.work_pattern, Task.expected_output]
     conditions:
       - "The current CommitmentAcceptance event has outcome=accepted and actor=Human."
     recommended: [Task.blocked_by, Resource, Assumption, Review, CriterionEvaluation]
   deliberate:
-    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.expected_output]
+    required: [Goal.target_state, GoalCriterion.statement, Commitment.accepted_by, Commitment.acceptance_events, Task.work_pattern, Task.expected_output]
     conditions:
       - "The current CommitmentAcceptance event has outcome=accepted and actor=Human."
     recommended: [alternatives, risks, Resource, schedule_basis, interfaces, lifecycle_reviews, PlanVersion]

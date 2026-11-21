@@ -27,12 +27,29 @@ plan_versions:
       - goal-demo-01
       - criterion-demo-01
       - criterion-demo-02
+      - execution-context-demo-01
+      - assumption-demo-01
+      - rationale-demo-01
       - commitment-demo-01
       - acceptance-demo-01
       - task-demo-01
       - task-demo-02
       - task-demo-03
       - evidence-demo-01
+
+execution_contexts:
+  - id: execution-context-demo-01
+    context_id: demo-payment-sandbox
+    kind: information_system
+    name: "Fictional payment demonstration environment"
+    description: "Isolated from production; use synthetic transactions only."
+    provenance:
+      applies_to: [context_id, kind, name, description]
+      status: stated
+      source_reference: "Fictional tabletop scenario definition."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
 
 people:
   - id: person-demo-01
@@ -102,11 +119,12 @@ goal:
   id: goal-demo-01
   title: "Restore the fictional demonstration payment path."
   target_state: "Demonstration payments pass the agreed verification checks."
+  purpose_statement: "Let the team verify recovery of the demonstration path without affecting production."
   verification_status: unverified
   closure_status: open
   has_criterion: [criterion-demo-01, criterion-demo-02]
   provenance:
-    applies_to: [title, target_state, verification_status, closure_status]
+    applies_to: [title, target_state, purpose_statement, verification_status, closure_status]
     status: stated
     source_reference: "Fictional scenario text in this file."
     recorded_by: person-demo-01
@@ -118,10 +136,16 @@ goal_criteria:
     criterion_id: "criterion-demo-01"
     belongs_to: goal-demo-01
     statement: "A test transaction succeeds through the primary route."
+    measurement_kind: quantitative
+    quantitative_measure:
+      operator: equals
+      target_value: 1
+      unit: "successful synthetic test transaction"
+      measurement_method: "Run the agreed primary-route test once and retain its output log."
     required_for_closure: true
     reviewer_must_differ_from_submitter: false
     provenance:
-      applies_to: [statement, required_for_closure, reviewer_must_differ_from_submitter]
+      applies_to: [statement, measurement_kind, quantitative_measure, required_for_closure, reviewer_must_differ_from_submitter]
       status: stated
       source_reference: "Fictional scenario acceptance criteria."
       recorded_by: person-demo-01
@@ -131,10 +155,11 @@ goal_criteria:
     criterion_id: "criterion-demo-02"
     belongs_to: goal-demo-01
     statement: "A second reviewer confirms the result from recorded evidence."
+    measurement_kind: qualitative
     required_for_closure: true
     reviewer_must_differ_from_submitter: true
     provenance:
-      applies_to: [statement, required_for_closure, reviewer_must_differ_from_submitter]
+      applies_to: [statement, measurement_kind, required_for_closure, reviewer_must_differ_from_submitter]
       status: stated
       source_reference: "Fictional scenario acceptance criteria."
       recorded_by: person-demo-01
@@ -145,12 +170,15 @@ commitment:
   id: commitment-demo-01
   for_goal: goal-demo-01
   result: "Diagnose and restore the primary route, or report the blocker and escalation path."
+  intent_statement: "Restore only inside the isolated demonstration environment; stop and escalate if a real payment path could be affected."
+  where_status: specified
   acceptance_status: accepted
   accepted_by: person-demo-01
   acceptance_events: [acceptance-demo-01]
   realized_by: [task-demo-01, task-demo-02, task-demo-03]
+  applies_in: [execution-context-demo-01]
   provenance:
-    applies_to: [result, accepted_by, acceptance_status]
+    applies_to: [result, intent_statement, where_status, applies_in, accepted_by, acceptance_status]
     status: human_confirmed
     source_reference: "Explicit acceptance event in this fictional example."
     recorded_by: person-demo-01
@@ -179,14 +207,18 @@ tasks:
   - id: task-demo-01
     title: "Capture the failing test and timestamp."
     kind: action
+    work_pattern: one_off
     state: done
     expected_output: "A recorded failure reproduction and timestamp."
+    method_summary: "Use a synthetic transaction and retain the failure output."
     due_condition: "Immediately after detection."
+    where_status: specified
+    executed_in: [execution-context-demo-01]
     realizes: commitment-demo-01
     assigned_to: person-demo-01
     produces: [evidence-demo-01]
     provenance:
-      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      applies_to: [title, kind, work_pattern, state, expected_output, method_summary, due_condition, where_status, executed_in, assigned_to]
       status: stated
       source_reference: "Fictional exercise task."
       recorded_by: person-demo-01
@@ -195,14 +227,19 @@ tasks:
   - id: task-demo-02
     title: "Check service health and the latest deployment."
     kind: action
+    work_pattern: one_off
     state: active
     expected_output: "A recorded diagnosis of service health and the latest deployment."
+    method_summary: "Compare service health with the most recent deployment record."
     due_condition: "Before changing the demonstration route."
+    where_status: specified
+    executed_in: [execution-context-demo-01]
     realizes: commitment-demo-01
     assigned_to: person-demo-01
     blocked_by: [task-demo-01]
+    has_rationale: rationale-demo-01
     provenance:
-      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      applies_to: [title, kind, work_pattern, state, expected_output, method_summary, due_condition, where_status, executed_in, assigned_to]
       status: stated
       source_reference: "Fictional exercise task."
       recorded_by: person-demo-01
@@ -211,16 +248,49 @@ tasks:
   - id: task-demo-03
     title: "Re-run the agreed verification and record the result."
     kind: action
+    work_pattern: one_off
     state: blocked
     expected_output: "A verification record for the agreed acceptance criteria."
+    method_summary: "Re-run the synthetic primary-route test and record the output for independent review."
     due_condition: "After diagnosis and any approved corrective action."
+    where_status: specified
+    executed_in: [execution-context-demo-01]
     realizes: commitment-demo-01
     assigned_to: person-demo-01
     blocked_by: [task-demo-02]
     provenance:
-      applies_to: [title, kind, state, expected_output, due_condition, assigned_to]
+      applies_to: [title, kind, work_pattern, state, expected_output, method_summary, due_condition, where_status, executed_in, assigned_to]
       status: stated
       source_reference: "Fictional exercise task."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+assumptions:
+  - id: assumption-demo-01
+    statement: "The most recent demonstration deployment may explain the route failure."
+    review_trigger: "Compare the failure timestamp with the deployment record before changing configuration."
+    state: active
+    owner: person-demo-01
+    applies_to: [task-demo-02]
+    provenance:
+      applies_to: [statement, review_trigger, state, applies_to]
+      status: inferred
+      source_reference: "Fictional scenario hypothesis; not yet verified."
+      recorded_by: person-demo-01
+      recorded_at: "2030-01-01T12:00:00Z"
+      plan_version: plan-version-demo-01
+
+causal_rationales:
+  - id: rationale-demo-01
+    statement: "If the latest deployment changed the primary route, identifying that change before an approved correction should help restore the demonstration path while limiting changes to the isolated environment."
+    status: proposed
+    explains: task-demo-02
+    based_on: [assumption-demo-01]
+    provenance:
+      applies_to: [statement, status, explains, based_on]
+      status: inferred
+      source_reference: "Fictional scenario hypothesis; requires review against the deployment record."
       recorded_by: person-demo-01
       recorded_at: "2030-01-01T12:00:00Z"
       plan_version: plan-version-demo-01
